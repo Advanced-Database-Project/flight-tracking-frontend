@@ -1,18 +1,55 @@
-# React + Vite
+# Advanced Database | Ride share | Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🚀 Features
 
-Currently, two official plugins are available:
+- ⚛️ Built with React.js
+- ⚡ Vite
+- 📦 Easy to develop, build, and deploy
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 📁 Project Structure
 
-## React Compiler
+```
+src/
+├── components/
+├── pages/
+├── App.jsx
+└── main.jsx
+```
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## 📦 Installation
 
-Note: This will impact Vite dev & build performances.
+```bash
+git clone https://github.com/Advanced-Database-Project/rideshare-frontend.git
+cd rideshare-frontend
+npm install
+```
 
-## Expanding the ESLint configuration
+## 🧪 Development
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```
+npm run dev
+```
+
+## 📦 Build
+
+```
+npm run build
+```
+
+## 🚀 Deploy
+
+Built using Vite.
+This project can deploy to GitHub Pages, Netlify, Vercel, or any static hosting.
+
+## 📄 License
+
+MIT License
+
+## versions
+
+- react: 19.x.x
+- react-dom: 19.x.x
+- react-redux: 9.x.x
+- react-router-dom: 7.x.x
+- tailwindcss: 4.x.x
+- vite: 6.x.x or above
