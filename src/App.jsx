@@ -2,6 +2,9 @@
 
 import { BrowserRouter } from "react-router-dom";
 import Router from "./routes";
+
+import "leaflet/dist/leaflet.css";
+
 // --------------------------------------------------
 
 function App() {
