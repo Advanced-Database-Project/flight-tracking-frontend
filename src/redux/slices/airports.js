@@ -2,7 +2,7 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 // utils
-import axios from "../../../utils/axios";
+import axios from "../../utils/axios";
 //
 import { dispatch } from "../store";
 
@@ -47,7 +47,7 @@ export function getAirports(payload) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get("/airports", {
+      const response = await axios.get("/api/airports", {
         params: payload,
       });
 
