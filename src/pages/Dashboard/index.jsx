@@ -1,6 +1,6 @@
 //
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -8,26 +8,47 @@ import {
   Popup,
   useMapEvents,
 } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import { AIRPORT_DATA } from "../../../demo_data/airports";
 
 // ----------------------------------------
 
 export default function Dashboard() {
+  const [airports, setAirport] = useState([]);
+
+  useEffect(() => {
+    const bigAirportData = AIRPORT_DATA?.filter(
+      (e) => e.type !== "heliport" && e.type !== "small_airport",
+    );
+
+    setAirport(bigAirportData);
+  }, []);
+
   function LocationMarker() {
-    const [position, setPosition] = useState(null);
     const map = useMapEvents({
       click() {
         map.locate();
       },
-      locationfound(e) {
-        setPosition(e.latlng);
-        map.flyTo(e.latlng, map.getZoom());
-      },
     });
 
-    return position === null ? null : (
-      <Marker position={position}>
-        <Popup>You are here</Popup>
-      </Marker>
+    return (
+      <MarkerClusterGroup>
+        {airports?.map((airport) => (
+          <Marker
+            key={airport.id}
+            position={[airport.latitude_deg, airport.longitude_deg]}
+          >
+            <Popup>
+              <div>
+                <p>Name: {airport.name}</p>
+                <p>Airport type: {airport.type}</p>
+                {airport.gps_code && <p>GPS code: {airport.gps_code}</p>}
+                {airport.local_code && <p>Local code: {airport.local_code}</p>}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
     );
   }
 
