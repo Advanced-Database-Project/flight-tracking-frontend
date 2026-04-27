@@ -1,16 +1,16 @@
 //
 
-import { configureStore, combineReducers } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit";
 import {
   useDispatch as useAppDispatch,
   useSelector as useAppSelector,
 } from "react-redux";
-import { rootPersistConfig, rootReducer } from "./rootReducer";
+import { rootReducer } from "./rootReducer";
 
 // ----------------------------------------
 
 const store = configureStore({
-  reducer: combineReducers(rootPersistConfig, rootReducer),
+  reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

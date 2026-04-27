@@ -32,7 +32,7 @@ const slice = createSlice({
     // GET USERS
     getAirportSuccess(state, action) {
       state.isLoading = false;
-      state.airports = action.payload;
+      state.airports = action?.payload ?? [];
     },
   },
 });
@@ -51,9 +51,7 @@ export function getAirports(payload) {
         params: payload,
       });
 
-      console.log(response);
-
-      dispatch(slice.actions.getAirportSuccess(response.data?.data ?? {}));
+      dispatch(slice.actions.getAirportSuccess(response?.data ?? []));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }

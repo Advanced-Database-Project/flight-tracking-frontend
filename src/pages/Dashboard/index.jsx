@@ -9,20 +9,20 @@ import {
   useMapEvents,
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import { AIRPORT_DATA } from "../../../demo_data/airports";
+// redux
+import { useDispatch, useSelector } from "../../redux/store";
+import { getAirports } from "../../redux/slices/airports";
 
 // ----------------------------------------
 
 export default function Dashboard() {
-  const [airports, setAirport] = useState([]);
+  const dispatch = useDispatch();
+
+  const { airports } = useSelector((state) => state.airports);
 
   useEffect(() => {
-    const bigAirportData = AIRPORT_DATA?.filter(
-      (e) => e.type !== "heliport" && e.type !== "small_airport",
-    );
-
-    setAirport(bigAirportData);
-  }, []);
+    dispatch(getAirports());
+  }, [dispatch]);
 
   function LocationMarker() {
     const map = useMapEvents({
@@ -30,7 +30,6 @@ export default function Dashboard() {
         map.locate();
       },
     });
-
     return (
       <MarkerClusterGroup>
         {airports?.map((airport) => (
@@ -70,7 +69,8 @@ export default function Dashboard() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker />
+
+        {airports?.length && <LocationMarker />}
       </MapContainer>
     </div>
   );
