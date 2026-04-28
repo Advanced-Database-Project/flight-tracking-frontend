@@ -2,11 +2,13 @@
 
 import { createSlice } from "@reduxjs/toolkit";
 // config
-import { FLIGHTS_API_ENDPOINT } from "../../../config";
+import { FLIGHT_SERVICE_PORT, FLIGHTS_API_ENDPOINT } from "../../../config";
 // utils
 import axios from "../../utils/axios";
 //
 import { dispatch } from "../store";
+// util
+import { generateEndPoint } from "../../utils/generateEndPoint";
 
 // ----------------------------------------
 
@@ -49,11 +51,15 @@ export function getFlights(payload) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get(FLIGHTS_API_ENDPOINT, {
-        params: payload,
-      });
-
-      console.log(response);
+      const response = await axios.get(
+        generateEndPoint(
+          FLIGHT_SERVICE_PORT,
+          FLIGHTS_API_ENDPOINT + "/" + payload.iata,
+        ),
+        {
+          params: payload,
+        },
+      );
 
       dispatch(slice.actions.getAirportSuccess(response?.data ?? []));
     } catch (error) {
