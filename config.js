@@ -14,5 +14,5 @@ export const AIRPORT_SERVICE_PORT = 5001;
 export const FLIGHT_SERVICE_PORT = 5002;
 
 // API END-POINTS
-export const AIRPORTS_API_ENDPOINT = "/api/airports";
-export const FLIGHTS_API_ENDPOINT = "/api/flights";
+export const AIRPORTS_API_ENDPOINT = "api/airports";
+export const FLIGHTS_API_ENDPOINT = "api/flights";

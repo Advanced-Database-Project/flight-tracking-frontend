@@ -7,7 +7,7 @@ import { USER_PATHS } from "../../routes/paths";
 
 export default function Navbar() {
   return (
-    <div>
+    <div style={{ padding: "10px" }}>
       <div
         style={{
           display: "flex",
@@ -21,7 +21,15 @@ export default function Navbar() {
         <Link to={USER_PATHS.searchFlights}>Search Flight</Link>
       </div>
 
-      <Outlet />
+      <div
+        style={{
+          padding: "10px",
+          gap: "20px",
+          marginInline: "28px",
+        }}
+      >
+        <Outlet />
+      </div>
     </div>
   );
 }
