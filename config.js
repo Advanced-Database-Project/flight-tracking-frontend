@@ -12,3 +12,7 @@ export const BASE_URL_IMG =
 export const AIRPORT_SERVICE_PORT = 5001;
 // 5002 - Flight Service
 export const FLIGHT_SERVICE_PORT = 5002;
+
+// API END-POINTS
+export const AIRPORTS_API_ENDPOINT = "/api/airports";
+export const FLIGHTS_API_ENDPOINT = "/api/flights";
