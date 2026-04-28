@@ -1,6 +1,6 @@
 //
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -8,26 +8,46 @@ import {
   Popup,
   useMapEvents,
 } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+// redux
+import { useDispatch, useSelector } from "../../redux/store";
+import { getAirports } from "../../redux/slices/airports";
 
 // ----------------------------------------
 
 export default function Dashboard() {
+  const dispatch = useDispatch();
+
+  const { airports } = useSelector((state) => state.airports);
+
+  useEffect(() => {
+    dispatch(getAirports());
+  }, [dispatch]);
+
   function LocationMarker() {
-    const [position, setPosition] = useState(null);
     const map = useMapEvents({
       click() {
         map.locate();
       },
-      locationfound(e) {
-        setPosition(e.latlng);
-        map.flyTo(e.latlng, map.getZoom());
-      },
     });
-
-    return position === null ? null : (
-      <Marker position={position}>
-        <Popup>You are here</Popup>
-      </Marker>
+    return (
+      <MarkerClusterGroup>
+        {airports?.map((airport) => (
+          <Marker
+            key={airport.id}
+            position={[airport.latitude_deg, airport.longitude_deg]}
+          >
+            <Popup>
+              <div>
+                <p>Name: {airport.name}</p>
+                <p>Airport type: {airport.type}</p>
+                {airport.gps_code && <p>GPS code: {airport.gps_code}</p>}
+                {airport.local_code && <p>Local code: {airport.local_code}</p>}
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+      </MarkerClusterGroup>
     );
   }
 
@@ -49,7 +69,8 @@ export default function Dashboard() {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <LocationMarker />
+
+        {airports?.length && <LocationMarker />}
       </MapContainer>
     </div>
   );
