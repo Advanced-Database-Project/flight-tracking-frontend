@@ -23,10 +23,49 @@ export default function index() {
   const searchFlight = () => {
     const params = {
       iata: flightData.flight_id,
-      flight_date: flightData.departure_date,
+      date: flightData.departure_date,
     };
 
     dispatch(getFlights(params));
+  };
+
+  console.log(flights);
+
+  const LoadFlightDetails = ({ flights }) => {
+    if (!flights?.entry?.data[0]) {
+      return <div>No flight found</div>;
+    }
+
+    const flight = flights.entry.data[0];
+
+    return (
+      <div style={{ display: "flex" }}>
+        <div
+          style={{
+            padding: "20px",
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          <div>Flight ID: {flight?.flight?.iata}</div>
+          <div>Airline: {flight?.airline?.name}</div>
+          <div>Flight status: {flight?.flight_status}</div>
+
+          <hr />
+
+          <div>Departure </div>
+          <div>Estimated Departure Time: {flight?.departure?.estimated}</div>
+          <div>Airport: {flight?.departure?.airport}</div>
+          <div>Entry Gate: {flight?.departure?.gate}</div>
+
+          <hr />
+
+          <div>Arrival</div>
+          <div>Estimated Arrival Time: {flight?.arrival?.scheduled}</div>
+          <div>Airport: {flight?.arrival?.airport}</div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -85,6 +124,12 @@ export default function index() {
         >
           Search
         </button>
+      </div>
+
+      <hr />
+
+      <div style={{ marginTop: "20px" }}>
+        <LoadFlightDetails flights={flights} />
       </div>
     </div>
   );

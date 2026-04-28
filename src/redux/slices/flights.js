@@ -54,7 +54,7 @@ export function getFlights(payload) {
       const response = await axios.get(
         generateEndPoint(
           FLIGHT_SERVICE_PORT,
-          FLIGHTS_API_ENDPOINT + "/" + payload.iata,
+          FLIGHTS_API_ENDPOINT + "/" + "search",
         ),
         {
           params: payload,
