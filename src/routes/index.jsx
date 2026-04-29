@@ -1,9 +1,11 @@
 //
 
 import { useRoutes, Navigate } from "react-router-dom";
+// common
+import NavBar from "../pages/Common/Navbar";
 // pages
-import Dashboard from "../pages/dashboard";
-
+import Dashboard from "../pages/Dashboard";
+import SearchFlights from "../pages/SearchFlights";
 // default path
 import NotFound from "../pages/NotFound";
 
@@ -23,8 +25,18 @@ export default function Router() {
     },
 
     {
-      path: "dashboard",
-      element: <Dashboard />,
+      path: "/",
+      element: <NavBar />,
+      children: [
+        {
+          path: "dashboard",
+          element: <Dashboard />,
+        },
+        {
+          path: "search-flights",
+          element: <SearchFlights />,
+        },
+      ],
     },
 
     // default path ...
