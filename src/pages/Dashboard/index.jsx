@@ -1,17 +1,12 @@
 //
 
-import { useEffect, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import { useEffect } from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 // redux
 import { useDispatch, useSelector } from "../../redux/store";
 import { getAirports } from "../../redux/slices/airports";
+// component
+import LocationMarker from "./component/LocationMarker";
 
 // ----------------------------------------
 
@@ -23,33 +18,6 @@ export default function Dashboard() {
   useEffect(() => {
     dispatch(getAirports());
   }, [dispatch]);
-
-  function LocationMarker() {
-    const map = useMapEvents({
-      click() {
-        map.locate();
-      },
-    });
-    return (
-      <MarkerClusterGroup>
-        {airports?.map((airport) => (
-          <Marker
-            key={airport.id}
-            position={[airport.latitude_deg, airport.longitude_deg]}
-          >
-            <Popup>
-              <div>
-                <p>Name: {airport.name}</p>
-                <p>Airport type: {airport.type}</p>
-                {airport.gps_code && <p>GPS code: {airport.gps_code}</p>}
-                {airport.local_code && <p>Local code: {airport.local_code}</p>}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-    );
-  }
 
   return (
     <div
@@ -70,7 +38,7 @@ export default function Dashboard() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {airports?.length && <LocationMarker />}
+        {airports?.length && <LocationMarker airports={airports} />}
       </MapContainer>
     </div>
   );
