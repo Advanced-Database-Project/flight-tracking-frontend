@@ -15,3 +15,7 @@ export const AIRPORTS_API_ENDPOINT = "api/airports";
 // 5002 - Flight Service
 export const FLIGHT_SERVICE_PORT = 5002;
 export const FLIGHTS_API_ENDPOINT = "api/flights";
+
+// 5003 - Flight Live tracing Service
+export const FLIGHT_LIVE_TRACING_SERVICE_PORT = 5003;
+export const FLIGHT_LIVE_TRACING_API_ENDPOINT = "api/flights/live-tracing";
