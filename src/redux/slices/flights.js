@@ -15,7 +15,7 @@ import { generateEndPoint } from "../../utils/generateEndPoint";
 const initialState = {
   isLoading: false,
   error: null,
-  flights: [],
+  flightDetail: {},
 };
 
 const slice = createSlice({
@@ -33,10 +33,10 @@ const slice = createSlice({
       state.error = action.payload;
     },
 
-    // GET USERS
-    getAirportSuccess(state, action) {
+    // GET FLIGHT DETAILS
+    getFlightDetailsSuccess(state, action) {
       state.isLoading = false;
-      state.flights = action?.payload ?? [];
+      state.flightDetail = action?.payload ?? [];
     },
   },
 });
@@ -54,14 +54,22 @@ export function getFlights(payload) {
       const response = await axios.get(
         generateEndPoint(
           FLIGHT_SERVICE_PORT,
-          FLIGHTS_API_ENDPOINT + "/" + "search",
+          FLIGHTS_API_ENDPOINT + "/" + payload.iata,
         ),
         {
           params: payload,
         },
       );
 
-      dispatch(slice.actions.getAirportSuccess(response?.data ?? []));
+      if (response?.data?.status === 200) {
+        dispatch(
+          slice.actions.getFlightDetailsSuccess(
+            response?.data?.entry?.data[0] ?? [],
+          ),
+        );
+      } else {
+        dispatch(slice.actions.hasError(error));
+      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
