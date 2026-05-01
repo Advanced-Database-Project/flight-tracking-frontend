@@ -1,8 +1,10 @@
 //
 
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { io } from "socket.io-client";
+import L from "leaflet";
+import "leaflet-rotatedmarker";
 // redux
 import { useDispatch, useSelector } from "../../redux/store";
 import { getAirports } from "../../redux/slices/airports";
@@ -15,6 +17,11 @@ const socket = io("http://127.0.0.1:5003", {
   transports: ["websocket"],
 });
 
+const planeIcon = new L.Icon({
+  iconUrl: "./plane.svg", // or SVG
+  iconSize: [25, 25],
+});
+
 export default function Dashboard() {
   const dispatch = useDispatch();
 
@@ -23,14 +30,27 @@ export default function Dashboard() {
   const { airports } = useSelector((state) => state.airports);
 
   useEffect(() => {
-    // dispatch(getAirports());
+    dispatch(getAirports());
 
     socket.on("connect", () => {
       console.log("-- socket connected: ", socket.id);
     });
 
     socket.on("initial-flight-data", (data) => {
-      setLiveFlightData(data?.slice(0, 50));
+      const newFlightData = [];
+      data.forEach((plane) => {
+        if (plane[6] && plane[5]) {
+          newFlightData[plane.icao24] = plane;
+          newFlightData.push({
+            latitude: plane[6],
+            longitude: plane[5],
+            altitude: plane[13],
+            icao24: plane.icao24,
+            true_track: plane[10],
+          });
+        }
+      });
+      setLiveFlightData(newFlightData);
     });
 
     const sendWsMessage = () => socket.emit("request-initial-state");
@@ -38,8 +58,6 @@ export default function Dashboard() {
 
     return () => socket.close();
   }, [dispatch]);
-
-  console.log(liveFlightData);
 
   return (
     <div
@@ -61,6 +79,16 @@ export default function Dashboard() {
         />
 
         {airports?.length && <LocationMarker airports={airports} />}
+
+        {liveFlightData.map((plane, i) => (
+          <Marker
+            key={`plane-${i}`}
+            position={[plane.latitude, plane.longitude]}
+            icon={planeIcon}
+            rotationAngle={plane.true_track || 0}
+            rotationOrigin="center"
+          />
+        ))}
       </MapContainer>
     </div>
   );
