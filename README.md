@@ -1,4 +1,4 @@
-# Advanced Database | Ride share | Frontend
+# Advanced Database | Flight Tracking | Frontend
 
 ## 🚀 Features
 
@@ -19,8 +19,8 @@ src/
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/Advanced-Database-Project/rideshare-frontend.git
-cd rideshare-frontend
+git clone https://github.com/Advanced-Database-Project/flight-tracking-frontend.git
+cd flight-tracking-frontend
 npm install
 ```
 
