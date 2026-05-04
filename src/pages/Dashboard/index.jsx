@@ -1,55 +1,63 @@
 //
 
 import { useEffect, useState } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { io } from "socket.io-client";
+import L from "leaflet";
+import "leaflet-rotatedmarker";
 // redux
 import { useDispatch, useSelector } from "../../redux/store";
 import { getAirports } from "../../redux/slices/airports";
+// component
+import LocationMarker from "./component/LocationMarker";
 
 // ----------------------------------------
 
+const socket = io("http://127.0.0.1:5003", {
+  transports: ["websocket"],
+});
+
+const planeIcon = new L.Icon({
+  iconUrl: "./plane.svg", // or SVG
+  iconSize: [25, 25],
+});
+
 export default function Dashboard() {
   const dispatch = useDispatch();
+
+  const [liveFlightData, setLiveFlightData] = useState([]);
 
   const { airports } = useSelector((state) => state.airports);
 
   useEffect(() => {
     dispatch(getAirports());
-  }, [dispatch]);
 
-  function LocationMarker() {
-    const map = useMapEvents({
-      click() {
-        map.locate();
-      },
+    socket.on("connect", () => {
+      console.log("-- socket connected: ", socket.id);
     });
-    return (
-      <MarkerClusterGroup>
-        {airports?.map((airport) => (
-          <Marker
-            key={airport.id}
-            position={[airport.latitude_deg, airport.longitude_deg]}
-          >
-            <Popup>
-              <div>
-                <p>Name: {airport.name}</p>
-                <p>Airport type: {airport.type}</p>
-                {airport.gps_code && <p>GPS code: {airport.gps_code}</p>}
-                {airport.local_code && <p>Local code: {airport.local_code}</p>}
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-      </MarkerClusterGroup>
-    );
-  }
+
+    socket.on("initial-flight-data", (data) => {
+      const newFlightData = [];
+      data.forEach((plane) => {
+        if (plane[6] && plane[5]) {
+          newFlightData[plane.icao24] = plane;
+          newFlightData.push({
+            latitude: plane[6],
+            longitude: plane[5],
+            altitude: plane[13],
+            icao24: plane.icao24,
+            true_track: plane[10],
+          });
+        }
+      });
+      setLiveFlightData(newFlightData);
+    });
+
+    const sendWsMessage = () => socket.emit("request-initial-state");
+    sendWsMessage();
+
+    return () => socket.close();
+  }, [dispatch]);
 
   return (
     <div
@@ -70,7 +78,17 @@ export default function Dashboard() {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
-        {airports?.length && <LocationMarker />}
+        {airports?.length && <LocationMarker airports={airports} />}
+
+        {liveFlightData.map((plane, i) => (
+          <Marker
+            key={`plane-${i}`}
+            position={[plane.latitude, plane.longitude]}
+            icon={planeIcon}
+            rotationAngle={plane.true_track || 0}
+            rotationOrigin="center"
+          />
+        ))}
       </MapContainer>
     </div>
   );
