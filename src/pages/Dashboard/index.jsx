@@ -1,7 +1,7 @@
 //
 
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
 import { io } from "socket.io-client";
 import L from "leaflet";
 import "leaflet-rotatedmarker";
@@ -59,6 +59,10 @@ export default function Dashboard() {
     return () => socket.close();
   }, [dispatch]);
 
+  // demo data for polyline
+  const source = [50.0379, 8.5622];
+  const destination = [51.47, -0.4543];
+
   return (
     <div
       style={{
@@ -89,6 +93,8 @@ export default function Dashboard() {
             rotationOrigin="center"
           />
         ))}
+
+        <Polyline positions={[source, destination]} />
       </MapContainer>
     </div>
   );
