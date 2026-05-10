@@ -19,3 +19,5 @@ export const FLIGHTS_API_ENDPOINT = "api/flights";
 // 5003 - Flight Live tracing Service
 export const FLIGHT_LIVE_TRACING_SERVICE_PORT = 5003;
 export const FLIGHT_LIVE_TRACING_API_ENDPOINT = "api/flights/live-tracing";
+export const FLIGHT_PUB_CHANNEL_TRACKING = "live-flight-tracking";
+export const FLIGHT_PUB_CHANNEL_UPDATES = "live-flight-updates";

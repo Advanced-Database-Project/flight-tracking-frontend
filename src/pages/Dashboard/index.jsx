@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "../../redux/store";
 import { getAirports } from "../../redux/slices/airports";
 // component
 import LocationMarker from "./component/LocationMarker";
+import { FLIGHT_PUB_CHANNEL_TRACKING } from "../../../config";
 
 // ----------------------------------------
 
@@ -36,21 +37,10 @@ export default function Dashboard() {
       console.log("-- socket connected: ", socket.id);
     });
 
-    socket.on("initial-flight-data", (data) => {
-      const newFlightData = [];
-      data.forEach((plane) => {
-        if (plane[6] && plane[5]) {
-          newFlightData[plane.icao24] = plane;
-          newFlightData.push({
-            latitude: plane[6],
-            longitude: plane[5],
-            altitude: plane[13],
-            icao24: plane.icao24,
-            true_track: plane[10],
-          });
-        }
-      });
-      setLiveFlightData(newFlightData);
+    socket.on(FLIGHT_PUB_CHANNEL_TRACKING, (data) => {
+      setLiveFlightData(
+        JSON.parse(data)?.filter((item) => item?.latitude && item?.longitude),
+      );
     });
 
     const sendWsMessage = () => socket.emit("request-initial-state");
@@ -83,9 +73,9 @@ export default function Dashboard() {
         {liveFlightData.map((plane, i) => (
           <Marker
             key={`plane-${i}`}
-            position={[plane.latitude, plane.longitude]}
+            position={[plane?.latitude || 0, plane?.longitude] || 0}
             icon={planeIcon}
-            rotationAngle={plane.true_track || 0}
+            rotationAngle={plane?.true_track || 0}
             rotationOrigin="center"
           />
         ))}
