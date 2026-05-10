@@ -38,9 +38,15 @@ export default function Dashboard() {
     });
 
     socket.on(FLIGHT_PUB_CHANNEL_TRACKING, (data) => {
-      setLiveFlightData(
-        JSON.parse(data)?.filter((item) => item?.latitude && item?.longitude),
-      );
+      // console.log("-- live flight data: ", JSON.parse(JSON.stringify(data)));
+
+      if (data?.length) {
+        setLiveFlightData(
+          JSON.parse(JSON.stringify(data))?.filter(
+            (item) => item?.latitude && item?.longitude,
+          ),
+        );
+      }
     });
 
     const sendWsMessage = () => socket.emit("request-initial-state");
