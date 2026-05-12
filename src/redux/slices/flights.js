@@ -52,7 +52,7 @@ export default slice.reducer;
 
 // ----------------------------------------
 
-// AIRPORTS: GET FLIGHTS
+// FLIGHTS: GET FLIGHTS
 export function getFlightDetail(payload) {
   return async () => {
     dispatch(slice.actions.startLoading());
@@ -82,19 +82,19 @@ export function getFlightDetail(payload) {
   };
 }
 
+// FLIGHTS: GET ALL FLIGHTS
 export function getFlights() {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(
-        generateEndPoint(
-          FLIGHT_SERVICE_PORT,
-          FLIGHTS_API_ENDPOINT + "/" + payload.iata,
-        ),
+        generateEndPoint(FLIGHT_SERVICE_PORT, FLIGHTS_API_ENDPOINT),
       );
 
       if (response?.data?.status === 200) {
-        dispatch(slice.actions.getFlightsSuccess(response?.data?.entry ?? []));
+        dispatch(
+          slice.actions.getFlightsSuccess(response?.data?.entry?.data ?? []),
+        );
       } else {
         dispatch(slice.actions.hasError(error));
       }
