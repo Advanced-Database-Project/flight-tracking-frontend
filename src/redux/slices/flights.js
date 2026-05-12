@@ -16,6 +16,7 @@ const initialState = {
   isLoading: false,
   error: null,
   flightDetail: {},
+  flights: [],
 };
 
 const slice = createSlice({
@@ -38,6 +39,11 @@ const slice = createSlice({
       state.isLoading = false;
       state.flightDetail = action?.payload ?? [];
     },
+
+    getFlightsSuccess(state, action) {
+      state.isLoading = false;
+      state.flights = action?.payload ?? [];
+    },
   },
 });
 
@@ -47,7 +53,7 @@ export default slice.reducer;
 // ----------------------------------------
 
 // AIRPORTS: GET FLIGHTS
-export function getFlights(payload) {
+export function getFlightDetail(payload) {
   return async () => {
     dispatch(slice.actions.startLoading());
     try {
@@ -67,6 +73,28 @@ export function getFlights(payload) {
             response?.data?.entry?.data[0] ?? [],
           ),
         );
+      } else {
+        dispatch(slice.actions.hasError(error));
+      }
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
+
+export function getFlights() {
+  return async () => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(
+        generateEndPoint(
+          FLIGHT_SERVICE_PORT,
+          FLIGHTS_API_ENDPOINT + "/" + payload.iata,
+        ),
+      );
+
+      if (response?.data?.status === 200) {
+        dispatch(slice.actions.getFlightsSuccess(response?.data?.entry ?? []));
       } else {
         dispatch(slice.actions.hasError(error));
       }

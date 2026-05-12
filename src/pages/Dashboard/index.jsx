@@ -11,6 +11,7 @@ import { getAirports } from "../../redux/slices/airports";
 // component
 import LocationMarker from "./component/LocationMarker";
 import { FLIGHT_PUB_CHANNEL_TRACKING } from "../../../config";
+import { getFlights } from "../../redux/slices/flights";
 
 // ----------------------------------------
 
@@ -32,6 +33,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     dispatch(getAirports());
+    dispatch(getFlights());
 
     socket.on("connect", () => {
       console.log("-- socket connected: ", socket.id);
