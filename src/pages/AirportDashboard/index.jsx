@@ -20,6 +20,7 @@ export default function AirportDashboard() {
   const socket = io(
     generateEndPoint(AIRPORT_LIVE_DASHBOARD_SERVICE_PORT, "/"),
     {
+      autoConnect: false,
       transports: ["websocket"],
     },
   );
@@ -28,10 +29,7 @@ export default function AirportDashboard() {
 
   const [scheduledFlights, setScheduledFlights] = useState({});
   const [filteredScheduledFlights, setFilteredScheduledFlights] = useState({});
-
-  const airport = {
-    city: "EDDF",
-  };
+  const [searchAirport, setSearchAirport] = useState(null);
 
   const { airports } = useSelector((state) => state.airports);
   const { flights } = useSelector((state) => state.flights);
@@ -39,13 +37,6 @@ export default function AirportDashboard() {
   useEffect(() => {
     socket.on("connect", () => {
       console.log("📢 live dashboard socket connected: ", socket.id);
-
-      const initChannel = () => {
-        console.log("📢 requesting initial state for live dashboard");
-
-        socket.emit(AIRPORT_LIVE_DASHBOARD_CHANNEL_INIT, airport);
-      };
-      initChannel();
     });
 
     socket.on(AIRPORT_LIVE_DASHBOARD_CHANNEL, (data) => {
@@ -60,7 +51,7 @@ export default function AirportDashboard() {
     }
 
     return () => socket.close();
-  }, [io, dispatch]);
+  }, [socket, dispatch]);
 
   useEffect(() => {
     const parsedData = scheduledFlights;
@@ -136,9 +127,45 @@ export default function AirportDashboard() {
     return `${hours}:${minutes}`;
   };
 
+  const handleChange = (e) => {
+    const value = e.target.value;
+    setSearchAirport(value);
+  };
+
+  const handleSearch = async () => {
+    socket.connect();
+
+    console.log("📢 requesting initial state for live dashboard");
+    socket.emit(AIRPORT_LIVE_DASHBOARD_CHANNEL_INIT, {
+      city: searchAirport,
+    });
+  };
+
   return (
     <div>
-      <div>AirportDashboard</div>
+      <div>Airport Dashboard</div>
+
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          gap: "0.5rem",
+          marginTop: "1rem",
+        }}
+      >
+        <input
+          placeholder="EDDF"
+          onChange={handleChange}
+          style={{
+            padding: "0.5rem",
+            border: "1px solid gray",
+            borderRadius: "4px",
+            backgroundColor: "white",
+            color: "black",
+          }}
+        />
+        <button onClick={handleSearch}>Search</button>
+      </div>
 
       <div
         style={{
