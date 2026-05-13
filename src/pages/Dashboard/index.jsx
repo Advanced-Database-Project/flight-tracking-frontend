@@ -88,7 +88,7 @@ export default function Dashboard() {
           />
         ))}
 
-        <ViewportTracker />
+        <ViewportTracker socket={socket} />
       </MapContainer>
     </div>
   );

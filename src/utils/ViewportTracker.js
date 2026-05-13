@@ -1,17 +1,13 @@
 //
 
 import { useMapEvents } from "react-leaflet";
+import debounce from "lodash.debounce";
 import { FLIGHT_PUB_CHANNEL_UPDATES } from "../../config";
 
 // ----------------------------------------
 
-export const ViewportTracker = (socket) => {
-  const map = useMapEvents({
-    moveend: sendViewport,
-    zoomend: sendViewport,
-  });
-
-  function sendViewport() {
+export const ViewportTracker = ({ socket }) => {
+  const debouncedSend = debounce(() => {
     const bounds = map.getBounds();
 
     const payload = {
@@ -23,7 +19,12 @@ export const ViewportTracker = (socket) => {
     };
 
     socket.emit(FLIGHT_PUB_CHANNEL_UPDATES, payload);
-  }
+  }, 300);
+
+  const map = useMapEvents({
+    moveend: debouncedSend,
+    zoomend: debouncedSend,
+  });
 
   return null;
 };
