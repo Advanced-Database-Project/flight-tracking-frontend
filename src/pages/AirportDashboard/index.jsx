@@ -16,15 +16,12 @@ import { getFlights } from "../../redux/slices/flights";
 
 // ----------------------------------------
 
-export default function AirportDashboard() {
-  const socket = io(
-    generateEndPoint(AIRPORT_LIVE_DASHBOARD_SERVICE_PORT, "/"),
-    {
-      autoConnect: false,
-      transports: ["websocket"],
-    },
-  );
+const socket = io(generateEndPoint(AIRPORT_LIVE_DASHBOARD_SERVICE_PORT, "/"), {
+  // autoConnect: false,
+  transports: ["websocket"],
+});
 
+export default function AirportDashboard() {
   const dispatch = useDispatch();
 
   const [scheduledFlights, setScheduledFlights] = useState({});
@@ -133,7 +130,7 @@ export default function AirportDashboard() {
   };
 
   const handleSearch = async () => {
-    socket.connect();
+    // socket.connect();
 
     console.log("📢 requesting initial state for live dashboard");
     socket.emit(AIRPORT_LIVE_DASHBOARD_CHANNEL_INIT, {
