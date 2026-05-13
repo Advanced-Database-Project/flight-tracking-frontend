@@ -127,7 +127,9 @@ export default function index() {
       <hr />
 
       <div style={{ marginTop: "20px" }}>
-        <LoadFlightDetails flightDetail={flightDetail} />
+        {flightDetail?.flight?.iata && (
+          <LoadFlightDetails flightDetail={flightDetail} />
+        )}
       </div>
     </div>
   );
