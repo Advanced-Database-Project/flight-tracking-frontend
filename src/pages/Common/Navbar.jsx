@@ -27,6 +27,7 @@ export default function Navbar() {
           padding: "10px",
           gap: "20px",
           marginInline: "28px",
+          marginTop: "24px",
         }}
       >
         <Outlet />
