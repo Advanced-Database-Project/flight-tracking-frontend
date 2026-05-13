@@ -12,13 +12,14 @@ export default function Navbar() {
         style={{
           display: "flex",
           padding: "10px",
-          gap: "20px",
-          marginInline: "28px",
+          gap: "46px",
+          marginInline: "34px",
           borderBottom: "1px solid grey",
         }}
       >
         <Link to={USER_PATHS.dashboard}>Flight Radar</Link>
         <Link to={USER_PATHS.searchFlights}>Search Flight</Link>
+        <Link to={USER_PATHS.liveDashboard}>Live Dashboard</Link>
       </div>
 
       <div
@@ -26,6 +27,7 @@ export default function Navbar() {
           padding: "10px",
           gap: "20px",
           marginInline: "28px",
+          marginTop: "24px",
         }}
       >
         <Outlet />
