@@ -11,6 +11,8 @@ import { getAirports } from "../../redux/slices/airports";
 // component
 import LocationMarker from "./component/LocationMarker";
 import { FLIGHT_PUB_CHANNEL_TRACKING } from "../../../config";
+// utils
+import { ViewportTracker } from "../../utils/ViewportTracker";
 
 // ----------------------------------------
 
@@ -85,6 +87,8 @@ export default function Dashboard() {
             rotationOrigin="center"
           />
         ))}
+
+        <ViewportTracker />
       </MapContainer>
     </div>
   );
