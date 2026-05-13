@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 // redux
-import { getFlights } from "../../redux/slices/flights";
+import { getFlightDetail } from "../../redux/slices/flights";
 import { useDispatch, useSelector } from "../../redux/store";
 
 // ----------------------------------------
@@ -26,7 +26,7 @@ export default function index() {
       date: flightData.departure_date,
     };
 
-    dispatch(getFlights(params));
+    dispatch(getFlightDetail(params));
   };
 
   const LoadFlightDetails = ({ flightDetail }) => {
@@ -127,7 +127,9 @@ export default function index() {
       <hr />
 
       <div style={{ marginTop: "20px" }}>
-        <LoadFlightDetails flightDetail={flightDetail} />
+        {flightDetail?.flight?.iata && (
+          <LoadFlightDetails flightDetail={flightDetail} />
+        )}
       </div>
     </div>
   );
