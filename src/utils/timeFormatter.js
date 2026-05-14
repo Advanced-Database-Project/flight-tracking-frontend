@@ -23,3 +23,11 @@ export const getTimeFormat = (timestamp) => {
 
   return `${hours}:${minutes}`;
 };
+
+// check if the arrival is on the next day compared to departure
+export const isNextDayArrival = (dep, arr) => {
+  const departure = new Date(dep);
+  const arrival = new Date(arr);
+
+  return departure.getUTCDate() !== arrival.getUTCDate();
+};
