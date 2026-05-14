@@ -74,7 +74,7 @@ export default function Dashboard() {
     >
       <MapContainer
         center={[49.48, 8.46]}
-        zoom={9}
+        zoom={10}
         scrollWheelZoom={true}
       >
         <TileLayer
