@@ -1,6 +1,6 @@
 //
 
-const airports = [
+export const airportsDataset = [
   {
     name: "Praslin Island Airport",
     iata: "PRI",
