@@ -58,9 +58,13 @@ export function getFlightRoutes(payload) {
           params: payload,
         },
       );
-      console.log(response.data);
+      console.log(response.data?.data);
 
-      dispatch(slice.actions.getFlightRoutesSuccess(response?.data ?? []));
+      if (response.data?.status === 200) {
+        dispatch(
+          slice.actions.getFlightRoutesSuccess(response?.data?.data ?? {}),
+        );
+      }
     } catch (error) {
       dispatch(slice.actions.hasError(error));
     }
