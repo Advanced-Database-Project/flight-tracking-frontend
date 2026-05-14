@@ -10,7 +10,7 @@ export const ViewportTracker = ({ socket }) => {
   const debouncedSend = debounce(() => {
     const bounds = map.getBounds();
 
-    const payload = {
+    const viewport = {
       minLat: bounds.getSouthWest().lat,
       maxLat: bounds.getNorthEast().lat,
       minLng: bounds.getSouthWest().lng,
@@ -18,7 +18,7 @@ export const ViewportTracker = ({ socket }) => {
       zoom: map.getZoom(),
     };
 
-    socket.emit(FLIGHT_PUB_CHANNEL_UPDATES, payload);
+    socket.emit(FLIGHT_PUB_CHANNEL_UPDATES, viewport);
   }, 300);
 
   const map = useMapEvents({

@@ -6,6 +6,7 @@ import NavBar from "../pages/Common/Navbar";
 // pages
 import Dashboard from "../pages/Dashboard";
 import SearchFlights from "../pages/SearchFlights";
+import SearchRoutes from "../pages/SearchRoutes";
 import AirportDashboard from "../pages/AirportDashboard";
 // default path
 import NotFound from "../pages/NotFound";
@@ -36,6 +37,10 @@ export default function Router() {
         {
           path: "search-flights",
           element: <SearchFlights />,
+        },
+        {
+          path: "search-routes",
+          element: <SearchRoutes />,
         },
         {
           path: "airport-dashboard",
