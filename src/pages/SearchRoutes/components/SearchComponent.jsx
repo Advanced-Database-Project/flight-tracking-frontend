@@ -27,13 +27,13 @@ export default function SearchComponent({
     const filtered = airportsDataset
       .filter((airport) => {
         return (
-          airport?.name?.toLowerCase().includes(lowerValue) ||
-          airport?.country?.toLowerCase().includes(lowerValue) ||
           airport?.iata?.toLowerCase().includes(lowerValue) ||
-          airport?.icao?.toLowerCase().includes(lowerValue)
+          airport?.name?.toLowerCase().includes(lowerValue) ||
+          airport?.icao?.toLowerCase().includes(lowerValue) ||
+          airport?.country?.toLowerCase().includes(lowerValue)
         );
       })
-      .slice(0, 10);
+      .slice(0, 50);
 
     setSuggestions(filtered);
   };
