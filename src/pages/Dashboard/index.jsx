@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { io } from "socket.io-client";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import "leaflet-rotatedmarker";
 // redux
 import { useDispatch, useSelector } from "../../redux/store";
@@ -24,6 +25,7 @@ const socket = io("http://127.0.0.1:5003", {
 const planeIcon = new L.Icon({
   iconUrl: "./plane.svg", // or SVG
   iconSize: [25, 25],
+  iconAnchor: [20, 20],
 });
 
 export default function Dashboard() {
@@ -84,10 +86,10 @@ export default function Dashboard() {
 
         {liveFlightData.map((plane, i) => (
           <Marker
-            key={`plane-${i}`}
+            key={`plane-${plane.latitude}-${i}`}
             position={[plane?.latitude || 0, plane?.longitude] || 0}
             icon={planeIcon}
-            rotationAngle={plane?.true_track || 0}
+            rotationAngle={plane?.true_track}
             rotationOrigin="center"
           >
             <Tooltip
