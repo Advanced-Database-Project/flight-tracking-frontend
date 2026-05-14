@@ -1,14 +1,33 @@
 //
 
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 // @component
 import SearchComponent from "./components/SearchComponent";
+// redux
+import { useDispatch, useSelector } from "../../redux/store";
+import { getFlightRoutes } from "../../redux/slices/flightRoutes";
+import FlightConnection from "./components/FlightConnection";
 
 // ----------------------------------------
 
 export default function index() {
+  const dispatch = useDispatch();
+
+  const { flightRoutes } = useSelector((state) => state.flightRoutes);
+
   const [selectedDepartAirport, setSelectedDepartAirport] = useState({});
   const [selectedArrivalAirport, setSelectedArrivalAirport] = useState({});
+
+  useEffect(() => {
+    if (selectedDepartAirport?.iata && selectedArrivalAirport?.iata) {
+      const params = {
+        source: selectedDepartAirport?.iata,
+        destination: selectedArrivalAirport?.iata,
+      };
+
+      dispatch(getFlightRoutes(params));
+    }
+  }, [selectedDepartAirport, selectedArrivalAirport]);
 
   const getSelectedAirport = (airport, key) => {
     if (key === "departAirport") {
@@ -41,8 +60,13 @@ export default function index() {
       <hr />
 
       <div style={{ marginTop: "20px" }}>
-        {!selectedDepartAirport?.iata && !selectedArrivalAirport?.iata && (
-          <div>Please select the Departure and Arrival airport</div>
+        {!selectedDepartAirport?.iata ||
+          (!selectedArrivalAirport?.iata && (
+            <div>Please select the Departure and Arrival airport</div>
+          ))}
+
+        {flightRoutes?.source && flightRoutes?.destination && (
+          <FlightConnection flightRoutes={flightRoutes} />
         )}
       </div>
     </div>
