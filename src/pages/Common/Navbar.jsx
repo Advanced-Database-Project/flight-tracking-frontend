@@ -19,6 +19,7 @@ export default function Navbar() {
       >
         <Link to={USER_PATHS.dashboard}>Flight Radar</Link>
         <Link to={USER_PATHS.searchFlights}>Search Flight</Link>
+        <Link to={USER_PATHS.searchRoutes}>Search Routes</Link>
         <Link to={USER_PATHS.liveDashboard}>Live Dashboard</Link>
       </div>
 

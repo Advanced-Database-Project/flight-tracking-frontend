@@ -8,5 +8,6 @@ export const PATH_AUTH = {
 export const USER_PATHS = {
   dashboard: "/dashboard",
   searchFlights: "/search-flights",
+  searchRoutes: "/search-routes",
   liveDashboard: "/airport-dashboard",
 };
