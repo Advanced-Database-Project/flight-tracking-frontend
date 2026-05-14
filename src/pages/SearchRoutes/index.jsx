@@ -17,17 +17,7 @@ export default function index() {
 
   const [selectedDepartAirport, setSelectedDepartAirport] = useState({});
   const [selectedArrivalAirport, setSelectedArrivalAirport] = useState({});
-
-  useEffect(() => {
-    if (selectedDepartAirport?.iata && selectedArrivalAirport?.iata) {
-      const params = {
-        source: selectedDepartAirport?.iata,
-        destination: selectedArrivalAirport?.iata,
-      };
-
-      dispatch(getFlightRoutes(params));
-    }
-  }, [selectedDepartAirport, selectedArrivalAirport]);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const getSelectedAirport = (airport, key) => {
     if (key === "departAirport") {
@@ -36,6 +26,18 @@ export default function index() {
 
     if (key === "arrivalAirport") {
       setSelectedArrivalAirport(airport);
+    }
+  };
+
+  const getData = () => {
+    if (selectedDepartAirport?.iata && selectedArrivalAirport?.iata) {
+      const params = {
+        source: selectedDepartAirport?.iata,
+        destination: selectedArrivalAirport?.iata,
+        departure_date: selectedDate,
+      };
+
+      dispatch(getFlightRoutes(params));
     }
   };
 
@@ -55,6 +57,34 @@ export default function index() {
           placeHolder="Arrival airport ..."
           ident="arrivalAirport"
         />
+
+        <input
+          type="date"
+          placeholder="Departure Date"
+          onChange={(e) => setSelectedDate(e.target.value)}
+          style={{
+            padding: "10px",
+            fontSize: "16px",
+            backgroundColor: "#f0f0f0",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            color: "black",
+          }}
+        />
+
+        <button
+          style={{
+            padding: "10px",
+            fontSize: "16px",
+            backgroundColor: "black",
+            border: "1px solid #ccc",
+            borderRadius: "8px",
+            color: "#f0f0f0",
+          }}
+          onClick={getData}
+        >
+          Search
+        </button>
       </div>
 
       <hr />
