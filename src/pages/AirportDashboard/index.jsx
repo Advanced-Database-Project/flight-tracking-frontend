@@ -95,7 +95,7 @@ export default function AirportDashboard() {
       const airportDetails = airports?.find(
         (row) =>
           row?.icao_code?.trim()?.toLowerCase() ===
-          element?.estDepartureAirport?.trim()?.toLowerCase(),
+          element?.estArrivalAirport?.trim()?.toLowerCase(),
       );
 
       if (flightDetails) {
@@ -175,6 +175,7 @@ export default function AirportDashboard() {
           gap: "1rem",
         }}
       >
+        <div style={{ display: "flex", flexDirection: "row-reverse" }}>{}</div>
         <div style={{ width: "45%" }}>
           <p>Arrival</p>
 
