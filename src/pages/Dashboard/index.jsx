@@ -1,7 +1,7 @@
 //
 
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, TileLayer, Polyline } from "react-leaflet";
+import { MapContainer, Marker, TileLayer } from "react-leaflet";
 import { io } from "socket.io-client";
 import L from "leaflet";
 import "leaflet-rotatedmarker";
@@ -91,8 +91,6 @@ export default function Dashboard() {
             rotationOrigin="center"
           />
         ))}
-
-        <Polyline positions={[source, destination]} />
       </MapContainer>
     </div>
   );
