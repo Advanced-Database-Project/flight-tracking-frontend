@@ -1,6 +1,7 @@
 //
 
 import {
+  formatDate,
   getFlightDuration,
   getTimeFormat,
   isNextDayArrival,
@@ -36,8 +37,10 @@ const DirectFlights = ({ routes }) => {
 
   return (
     <div style={{ alignItems: "center" }}>
-      <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <small>Direct Flight</small>
+
+        <small>Scheduled on: {formatDate(segment?.departure?.scheduled)}</small>
       </div>
 
       <div
@@ -95,8 +98,12 @@ const SingleLayover = ({ routes }) => {
       style={{ alignItems: "center" }}
       key={`${routes?.source}-${routes?.destination}`}
     >
-      <div>
+      <div style={{ display: "flex", justifyContent: "space-between" }}>
         <small>Layovers: {Number(routes?.layovers)}</small>
+
+        <small>
+          Scheduled on: {formatDate(routes?.segments[0]?.departure?.scheduled)}
+        </small>
       </div>
 
       {routes?.segments?.map((seg, i) => {

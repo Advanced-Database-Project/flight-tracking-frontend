@@ -58,7 +58,6 @@ export function getFlightRoutes(payload) {
           params: payload,
         },
       );
-      console.log(response.data?.data);
 
       if (response.data?.status === 200) {
         dispatch(
