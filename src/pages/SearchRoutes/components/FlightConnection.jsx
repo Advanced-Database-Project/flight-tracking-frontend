@@ -11,7 +11,7 @@ import {
 export default function FlightConnection({ flightRoutes }) {
   return (
     <div style={{ maxWidth: 600 }}>
-      {flightRoutes?.routes?.map((routes) => {
+      {flightRoutes?.routes?.map((routes, i) => {
         return (
           <div
             style={{
@@ -20,10 +20,10 @@ export default function FlightConnection({ flightRoutes }) {
               border: "1px solid black",
               borderRadius: 8,
             }}
-            key={`${routes?.source}-${routes?.destination}`}
+            key={`${routes?.source}-${routes?.destination}-${i}`}
           >
             {routes?.layovers === 0 ? <DirectFlights routes={routes} /> : null}
-            {routes?.layovers === 1 ? <SingleLayover routes={routes} /> : null}
+            {routes?.layovers >= 1 ? <SingleLayover routes={routes} /> : null}
           </div>
         );
       })}
@@ -96,7 +96,7 @@ const SingleLayover = ({ routes }) => {
       key={`${routes?.source}-${routes?.destination}`}
     >
       <div>
-        <small>One Layover</small>
+        <small>Layovers: {Number(routes?.layovers)}</small>
       </div>
 
       {routes?.segments?.map((seg, i) => {
