@@ -1,9 +1,10 @@
 //
 
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, TileLayer } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 import { io } from "socket.io-client";
 import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import "leaflet-rotatedmarker";
 // redux
 import { useDispatch, useSelector } from "../../redux/store";
@@ -11,6 +12,8 @@ import { getAirports } from "../../redux/slices/airports";
 // component
 import LocationMarker from "./component/LocationMarker";
 import { FLIGHT_PUB_CHANNEL_TRACKING } from "../../../config";
+// utils
+import { ViewportTracker } from "../../utils/ViewportTracker";
 import { getFlights } from "../../redux/slices/flights";
 
 // ----------------------------------------
@@ -22,6 +25,7 @@ const socket = io("http://127.0.0.1:5003", {
 const planeIcon = new L.Icon({
   iconUrl: "./plane.svg", // or SVG
   iconSize: [25, 25],
+  iconAnchor: [20, 20],
 });
 
 export default function Dashboard() {
@@ -42,9 +46,9 @@ export default function Dashboard() {
     socket.on(FLIGHT_PUB_CHANNEL_TRACKING, (data) => {
       // console.log("-- live flight data: ", JSON.parse(JSON.stringify(data)));
 
-      if (data?.length) {
+      if (data?.currentFlights?.length) {
         setLiveFlightData(
-          JSON.parse(JSON.stringify(data))?.filter(
+          JSON.parse(JSON.stringify(data?.currentFlights))?.filter(
             (item) => item?.latitude && item?.longitude,
           ),
         );
@@ -57,9 +61,7 @@ export default function Dashboard() {
     return () => socket.close();
   }, [dispatch]);
 
-  // demo data for polyline
-  const source = [50.0379, 8.5622];
-  const destination = [51.47, -0.4543];
+  console.log(liveFlightData.slice(0, 5));
 
   return (
     <div
@@ -71,8 +73,8 @@ export default function Dashboard() {
       }}
     >
       <MapContainer
-        center={[52.51, 13.38]}
-        zoom={6}
+        center={[49.48, 8.46]}
+        zoom={10}
         scrollWheelZoom={true}
       >
         <TileLayer
@@ -84,13 +86,31 @@ export default function Dashboard() {
 
         {liveFlightData.map((plane, i) => (
           <Marker
-            key={`plane-${i}`}
+            key={`plane-${plane.latitude}-${i}`}
             position={[plane?.latitude || 0, plane?.longitude] || 0}
             icon={planeIcon}
-            rotationAngle={plane?.true_track || 0}
+            rotationAngle={plane?.true_track}
             rotationOrigin="center"
-          />
+          >
+            <Tooltip
+              direction="top"
+              offset={[0, -10]}
+              opacity={1}
+            >
+              <div>
+                <div>
+                  <b>{plane.callsign}</b>
+                </div>
+                <div>Velocity: {plane.velocity} km/h</div>
+                <div>Altitude: {plane.altitude} ft</div>
+                <div>Speed: {plane.speed} km/h</div>
+                <div>Direction: {plane.true_track} deg</div>
+              </div>
+            </Tooltip>
+          </Marker>
         ))}
+
+        <ViewportTracker socket={socket} />
       </MapContainer>
     </div>
   );
