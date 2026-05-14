@@ -22,6 +22,10 @@ export const FLIGHT_LIVE_TRACING_API_ENDPOINT = "api/flights/live-tracing";
 export const FLIGHT_PUB_CHANNEL_TRACKING = "live-flight-tracking";
 export const FLIGHT_PUB_CHANNEL_UPDATES = "live-flight-updates";
 
+// 5004 - Route Service
+export const FLIGHT_ROUTE_SERVICE_PORT = 5004;
+export const FLIGHT_ROUTES_API_ENDPOINT = "api/routes";
+
 // 5006 - Airport Live Dashboard Service
 export const AIRPORT_LIVE_DASHBOARD_SERVICE_PORT = 5006;
 // export const AIRPORT_LIVE_DASHBOARD_API_ENDPOINT = "api/live-dashboard";
