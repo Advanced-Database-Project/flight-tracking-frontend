@@ -1,7 +1,13 @@
 //
 
 import { useEffect, useState } from "react";
-import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
+import {
+  MapContainer,
+  Marker,
+  TileLayer,
+  Tooltip,
+  CircleMarker,
+} from "react-leaflet";
 import { io } from "socket.io-client";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -32,6 +38,7 @@ export default function Dashboard() {
   const dispatch = useDispatch();
 
   const [liveFlightData, setLiveFlightData] = useState([]);
+  const [position, setPosition] = useState([0, 0]);
 
   const { airports } = useSelector((state) => state.airports);
 
@@ -58,10 +65,17 @@ export default function Dashboard() {
     const sendWsMessage = () => socket.emit("request-initial-state");
     sendWsMessage();
 
+    navigator?.geolocation?.getCurrentPosition(
+      (pos) => {
+        setPosition([pos.coords.latitude, pos.coords.longitude]);
+      },
+      (err) => {
+        console.error(err);
+      },
+    );
+
     return () => socket.close();
   }, [dispatch]);
-
-  console.log(liveFlightData.slice(0, 5));
 
   return (
     <div
@@ -109,6 +123,16 @@ export default function Dashboard() {
             </Tooltip>
           </Marker>
         ))}
+
+        <CircleMarker
+          center={position}
+          radius={8}
+          pathOptions={{
+            color: "white",
+            fillColor: "blue",
+            fillOpacity: 0.8,
+          }}
+        />
 
         <ViewportTracker socket={socket} />
       </MapContainer>
