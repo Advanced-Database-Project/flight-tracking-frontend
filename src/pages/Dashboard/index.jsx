@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "../../redux/store";
 import { getAirports } from "../../redux/slices/airports";
 // component
 import LocationMarker from "./component/LocationMarker";
+import { FlightAlertDetails } from "./component/FlightAlertDetails";
 import { FLIGHT_PUB_CHANNEL_TRACKING } from "../../../config";
 // utils
 import { ViewportTracker } from "../../utils/ViewportTracker";
@@ -39,6 +40,7 @@ export default function Dashboard() {
 
   const [liveFlightData, setLiveFlightData] = useState([]);
   const [position, setPosition] = useState([0, 0]);
+  const [alertFlightData, setAlertFlightData] = useState([]);
 
   const { airports } = useSelector((state) => state.airports);
 
@@ -53,12 +55,17 @@ export default function Dashboard() {
     socket.on(FLIGHT_PUB_CHANNEL_TRACKING, (data) => {
       // console.log("-- live flight data: ", JSON.parse(JSON.stringify(data)));
 
-      if (data?.currentFlights?.length) {
+      const flightData = JSON.parse(JSON.stringify(data?.currentFlights || []));
+      const alertData = JSON.parse(JSON.stringify(data?.alerts || []));
+
+      if (flightData?.length) {
         setLiveFlightData(
           JSON.parse(JSON.stringify(data?.currentFlights))?.filter(
             (item) => item?.latitude && item?.longitude,
           ),
         );
+
+        setAlertFlightData(alertData);
       }
     });
 
@@ -81,8 +88,7 @@ export default function Dashboard() {
     <div
       style={{
         display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
+        gap: "10px",
         marginTop: "20px",
       }}
     >
@@ -98,31 +104,33 @@ export default function Dashboard() {
 
         {airports?.length && <LocationMarker airports={airports} />}
 
-        {liveFlightData.map((plane, i) => (
-          <Marker
-            key={`plane-${plane.latitude}-${i}`}
-            position={[plane?.latitude || 0, plane?.longitude] || 0}
-            icon={planeIcon}
-            rotationAngle={plane?.true_track}
-            rotationOrigin="center"
-          >
-            <Tooltip
-              direction="top"
-              offset={[0, -10]}
-              opacity={1}
+        {liveFlightData?.map((plane, i) => {
+          return (
+            <Marker
+              key={`plane-${plane.latitude}-${i}`}
+              position={[plane?.latitude || 0, plane?.longitude] || 0}
+              icon={planeIcon}
+              rotationAngle={plane?.true_track}
+              rotationOrigin="center"
             >
-              <div>
+              <Tooltip
+                direction="top"
+                offset={[0, -10]}
+                opacity={1}
+              >
                 <div>
-                  <b>{plane.callsign}</b>
+                  <div>
+                    <b>{plane.callsign}</b>
+                  </div>
+                  <div>Velocity: {plane.velocity} km/h</div>
+                  <div>Altitude: {plane.altitude} ft</div>
+                  <div>Speed: {plane.speed} km/h</div>
+                  <div>Direction: {plane.true_track} deg</div>
                 </div>
-                <div>Velocity: {plane.velocity} km/h</div>
-                <div>Altitude: {plane.altitude} ft</div>
-                <div>Speed: {plane.speed} km/h</div>
-                <div>Direction: {plane.true_track} deg</div>
-              </div>
-            </Tooltip>
-          </Marker>
-        ))}
+              </Tooltip>
+            </Marker>
+          );
+        })}
 
         <CircleMarker
           center={position}
@@ -136,6 +144,10 @@ export default function Dashboard() {
 
         <ViewportTracker socket={socket} />
       </MapContainer>
+
+      <div style={{ width: "16%" }}>
+        <FlightAlertDetails alertFlightData={alertFlightData} />
+      </div>
     </div>
   );
 }
