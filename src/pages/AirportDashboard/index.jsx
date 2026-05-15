@@ -152,18 +152,28 @@ export default function AirportDashboard() {
               >
                 <div>
                   <p style={{ margin: 0 }}>
-                    <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
+                    <b>Flight ID: </b> {flight?.flight?.iata?.toUpperCase()}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Airport:</b> {flight?.airport?.name}
+                    <b>Airport: </b> {flight?.arrival?.airport}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Country:</b> {flight?.airport?.municipality}
+                    <b>IATA: </b> {flight?.arrival?.iata}
                   </p>
 
                   <p style={{ margin: 0 }}>
-                    <b>Scheduled Arrival Time:</b>
+                    <b>Scheduled Arrival Time: </b>
                     {getDateFormat(flight?.arrival?.estimated)}
+                  </p>
+
+                  <p style={{ margin: 0 }}>
+                    <b>Terminal: </b>
+                    {flight?.arrival?.terminal}
+                  </p>
+
+                  <p style={{ margin: 0 }}>
+                    <b>Gate: </b>
+                    {flight?.arrival?.gate ?? ""}
                   </p>
                 </div>
 
@@ -177,7 +187,7 @@ export default function AirportDashboard() {
                         borderRadius: 4,
                       }}
                     >
-                      Delayed by {flight?.arrival?.delay} minutes
+                      Delayed
                     </small>
                   ) : (
                     <small
@@ -216,18 +226,28 @@ export default function AirportDashboard() {
               >
                 <div>
                   <p style={{ margin: 0 }}>
-                    <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
+                    <b>Flight ID: </b> {flight?.flight?.iata?.toUpperCase()}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Airport:</b> {flight?.airport?.name}
+                    <b>Airport: </b> {flight?.departure?.airport}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Country:</b> {flight?.airport?.municipality}
+                    <b>IATA: </b> {flight?.departure?.iata}
                   </p>
 
                   <p style={{ margin: 0 }}>
-                    <b>Estimated Departure Time:</b>{" "}
+                    <b>Scheduled Departure Time: </b>
                     {getDateFormat(flight?.departure?.estimated)}
+                  </p>
+
+                  <p style={{ margin: 0 }}>
+                    <b>Terminal: </b>
+                    {flight?.arrival?.terminal}
+                  </p>
+
+                  <p style={{ margin: 0 }}>
+                    <b>Gate: </b>
+                    {flight?.arrival?.gate ?? ""}
                   </p>
                 </div>
 
@@ -242,7 +262,7 @@ export default function AirportDashboard() {
                           borderRadius: 4,
                         }}
                       >
-                        Delayed by {flight?.arrival?.delay} minutes
+                        Delayed
                       </small>
                     ) : (
                       <small
