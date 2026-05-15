@@ -10,7 +10,7 @@ export const FlightAlertDetails = ({ alertFlightData }) => {
       style={{
         border: "1px solid black",
         padding: 4,
-        maxHeight: 900,
+        maxHeight: 820,
         scrollBehavior: "auto",
         overflowY: "scroll",
       }}
