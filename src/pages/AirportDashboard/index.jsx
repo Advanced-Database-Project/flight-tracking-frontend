@@ -210,22 +210,54 @@ export default function AirportDashboard() {
                   padding: "1rem",
                   marginBottom: "0.5rem",
                   width: "100%",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                <p style={{ margin: 0 }}>
-                  <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Airport:</b> {flight?.airport?.name}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Country:</b> {flight?.airport?.municipality}
-                </p>
+                <div>
+                  <p style={{ margin: 0 }}>
+                    <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Airport:</b> {flight?.airport?.name}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Country:</b> {flight?.airport?.municipality}
+                  </p>
 
-                <p style={{ margin: 0 }}>
-                  <b>Estimated Departure Time:</b>{" "}
-                  {getDateFormat(flight?.departure?.estimated)}
-                </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Estimated Departure Time:</b>{" "}
+                    {getDateFormat(flight?.departure?.estimated)}
+                  </p>
+                </div>
+
+                <div>
+                  <div>
+                    {flight?.departure?.delay > 0 ? (
+                      <small
+                        style={{
+                          backgroundColor: "orange",
+                          color: "white",
+                          padding: 4,
+                          borderRadius: 4,
+                        }}
+                      >
+                        Delayed by {flight?.arrival?.delay} minutes
+                      </small>
+                    ) : (
+                      <small
+                        style={{
+                          backgroundColor: "green",
+                          color: "white",
+                          padding: 4,
+                          borderRadius: 4,
+                        }}
+                      >
+                        On time
+                      </small>
+                    )}
+                  </div>
+                </div>
               </div>
             );
           })}
