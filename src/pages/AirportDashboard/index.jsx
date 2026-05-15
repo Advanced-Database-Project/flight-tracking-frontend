@@ -57,28 +57,6 @@ export default function AirportDashboard() {
     for (let index = 0; index < parsedData?.arr?.length; index++) {
       const element = parsedData?.arr[index];
 
-      const flightDetails = flights?.find((row) => {
-        return (
-          row?.flight_status === "scheduled" &&
-          row?.aircraft?.icao?.trim()?.toLowerCase() ===
-            element?.icao24?.trim()?.toLowerCase()
-        );
-      });
-
-      const airportDetails = airports?.find(
-        (row) =>
-          row?.icao_code?.trim()?.toLowerCase() ===
-          element?.estDepartureAirport?.trim()?.toLowerCase(),
-      );
-
-      if (flightDetails) {
-        element.flight = flightDetails;
-      }
-
-      if (airportDetails) {
-        element.airport = airportDetails;
-      }
-
       arrData.push(element);
     }
 
@@ -86,32 +64,12 @@ export default function AirportDashboard() {
     for (let index = 0; index < parsedData?.dep?.length; index++) {
       const element = parsedData?.dep[index];
 
-      const flightDetails = flights?.find(
-        (row) =>
-          row?.aircraft?.icao24?.trim()?.toLowerCase() ===
-          element?.icao24?.trim()?.toLowerCase(),
-      );
-
-      const airportDetails = airports?.find(
-        (row) =>
-          row?.icao_code?.trim()?.toLowerCase() ===
-          element?.estArrivalAirport?.trim()?.toLowerCase(),
-      );
-
-      if (flightDetails) {
-        element.flight = flightDetails;
-      }
-
-      if (airportDetails) {
-        element.airport = airportDetails;
-      }
-
       depData.push(element);
     }
 
     setFilteredScheduledFlights({
-      arr: arrData?.sort((a, b) => a?.firstSeen - b?.firstSeen),
-      dep: depData?.sort((a, b) => b?.lastSeen - a?.lastSeen),
+      arr: arrData,
+      dep: depData,
     });
   }, [scheduledFlights, airports, flights]);
 
@@ -182,36 +140,58 @@ export default function AirportDashboard() {
           {filteredScheduledFlights?.arr?.map((flight, i) => {
             return (
               <div
-                key={`${flight?.flight_id}-${i}`}
+                key={`${flight?.flight?.iata}-${i}`}
                 style={{
                   border: "1px solid gray",
                   borderRadius: "4px",
                   padding: "1rem",
                   marginBottom: "0.5rem",
+                  display: "flex",
+                  justifyContent: "space-between",
                 }}
               >
-                <p style={{ margin: 0 }}>
-                  <b>Flight ID:</b> {flight?.icao24?.toUpperCase()}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Callsign:</b> {flight?.callsign}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Airport:</b> {flight?.airport?.name}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Country:</b> {flight?.airport?.municipality}
-                </p>
+                <div>
+                  <p style={{ margin: 0 }}>
+                    <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Airport:</b> {flight?.airport?.name}
+                  </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Country:</b> {flight?.airport?.municipality}
+                  </p>
 
-                <p style={{ margin: 0 }}>
-                  <b>Scheduled Time:</b>
-                  {getDateFormat(flight?.firstSeen * 1000)}
-                </p>
+                  <p style={{ margin: 0 }}>
+                    <b>Scheduled Arrival Time:</b>
+                    {getDateFormat(flight?.arrival?.estimated)}
+                  </p>
+                </div>
 
-                {/* <p style={{ margin: 0 }}>
-                  <b>Estimated Arrival Time:</b>{" "}
-                  {getDateFormat(flight?.lastSeen * 1000)}
-                </p> */}
+                <div>
+                  {flight?.arrival?.delay > 0 ? (
+                    <small
+                      style={{
+                        backgroundColor: "orange",
+                        color: "white",
+                        padding: 4,
+                        borderRadius: 4,
+                      }}
+                    >
+                      Delayed by {flight?.arrival?.delay} minutes
+                    </small>
+                  ) : (
+                    <small
+                      style={{
+                        backgroundColor: "green",
+                        color: "white",
+                        padding: 4,
+                        borderRadius: 4,
+                      }}
+                    >
+                      On time
+                    </small>
+                  )}
+                </div>
               </div>
             );
           })}
@@ -233,10 +213,7 @@ export default function AirportDashboard() {
                 }}
               >
                 <p style={{ margin: 0 }}>
-                  <b>Flight ID:</b> {flight?.icao24?.toUpperCase()}
-                </p>
-                <p style={{ margin: 0 }}>
-                  <b>Callsign:</b> {flight?.callsign}
+                  <b>Flight ID:</b> {flight?.flight?.iata?.toUpperCase()}
                 </p>
                 <p style={{ margin: 0 }}>
                   <b>Airport:</b> {flight?.airport?.name}
@@ -245,14 +222,9 @@ export default function AirportDashboard() {
                   <b>Country:</b> {flight?.airport?.municipality}
                 </p>
 
-                {/* <p style={{ margin: 0 }}>
-                  <b>Scheduled Time:</b>
-                  {getDateFormat(flight?.firstSeen * 1000)}
-                </p> */}
-
                 <p style={{ margin: 0 }}>
-                  <b>Estimated Arrival Time:</b>{" "}
-                  {getDateFormat(flight?.firstSeen * 1000)}
+                  <b>Estimated Departure Time:</b>{" "}
+                  {getDateFormat(flight?.departure?.estimated)}
                 </p>
               </div>
             );
