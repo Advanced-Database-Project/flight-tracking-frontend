@@ -89,65 +89,72 @@ export default function Dashboard() {
       style={{
         display: "flex",
         gap: "10px",
-        marginTop: "20px",
+        marginTop: "8px",
       }}
     >
-      <MapContainer
-        center={[49.48, 8.46]}
-        zoom={10}
-        scrollWheelZoom={true}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      <>
+        <div></div>
 
-        {airports?.length && <LocationMarker airports={airports} />}
+        <MapContainer
+          center={[49.48, 8.46]}
+          zoom={10}
+          scrollWheelZoom={true}
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
 
-        {liveFlightData?.map((plane, i) => {
-          return (
-            <Marker
-              key={`plane-${plane.latitude}-${i}`}
-              position={[plane?.latitude || 0, plane?.longitude] || 0}
-              icon={planeIcon}
-              rotationAngle={plane?.true_track}
-              rotationOrigin="center"
-            >
-              <Tooltip
-                direction="top"
-                offset={[0, -10]}
-                opacity={1}
-              >
-                <div>
-                  <div>
-                    <b>{plane.callsign}</b>
-                  </div>
-                  <div>Velocity: {plane.velocity} km/h</div>
-                  <div>Altitude: {plane.altitude} ft</div>
-                  <div>Speed: {plane.speed} km/h</div>
-                  <div>Direction: {plane.true_track} deg</div>
-                </div>
-              </Tooltip>
-            </Marker>
-          );
-        })}
+          {airports?.length && <LocationMarker airports={airports} />}
 
-        <CircleMarker
-          center={position}
-          radius={8}
-          pathOptions={{
-            color: "white",
-            fillColor: "blue",
-            fillOpacity: 0.8,
-          }}
-        />
+          {liveFlightData?.map((plane, i) => {
+            return (
+              <>
+                {plane.altitude ? (
+                  <Marker
+                    key={`plane-${plane.latitude}-${i}`}
+                    position={[plane?.latitude || 0, plane?.longitude] || 0}
+                    icon={planeIcon}
+                    rotationAngle={plane?.true_track}
+                    rotationOrigin="center"
+                  >
+                    <Tooltip
+                      direction="top"
+                      offset={[0, -10]}
+                      opacity={1}
+                    >
+                      <div>
+                        <div>
+                          <b>{plane.callsign}</b>
+                        </div>
+                        <div>Velocity: {plane.velocity} km/h</div>
+                        <div>Altitude: {plane.altitude} ft</div>
+                        <div>Direction: {plane.true_track} deg</div>
+                      </div>
+                    </Tooltip>
+                  </Marker>
+                ) : null}
+              </>
+            );
+          })}
 
-        <ViewportTracker socket={socket} />
-      </MapContainer>
+          <CircleMarker
+            center={position}
+            radius={8}
+            pathOptions={{
+              color: "white",
+              fillColor: "blue",
+              fillOpacity: 0.8,
+            }}
+          />
 
-      <div style={{ width: "16%" }}>
-        <FlightAlertDetails alertFlightData={alertFlightData} />
-      </div>
+          <ViewportTracker socket={socket} />
+        </MapContainer>
+
+        <div style={{ width: "16%" }}>
+          <FlightAlertDetails alertFlightData={alertFlightData} />
+        </div>
+      </>
     </div>
   );
 }

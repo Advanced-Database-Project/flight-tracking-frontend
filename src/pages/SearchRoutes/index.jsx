@@ -92,12 +92,26 @@ export default function index() {
       <div style={{ marginTop: "20px" }}>
         {!selectedDepartAirport?.iata ||
           (!selectedArrivalAirport?.iata && (
-            <div>Please select the Departure and Arrival airport</div>
+            <div>
+              Please select the Departure, Arrival airport and Departure date
+            </div>
           ))}
 
         {flightRoutes?.source && flightRoutes?.destination && (
           <FlightConnection flightRoutes={flightRoutes} />
         )}
+
+        {selectedArrivalAirport &&
+          selectedDepartAirport &&
+          selectedDate &&
+          !flightRoutes?.source?.length && (
+            <>
+              <p>
+                Sorry, we dont have any matching flights in the database ...
+              </p>
+              <p>Please try with another routes ...</p>
+            </>
+          )}
       </div>
     </div>
   );
