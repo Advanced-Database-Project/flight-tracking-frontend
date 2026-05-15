@@ -13,6 +13,7 @@ import {
 } from "../../../config";
 import { getAirports } from "../../redux/slices/airports";
 import { getFlights } from "../../redux/slices/flights";
+import SearchComponent from "../SearchRoutes/components/SearchComponent";
 
 // ----------------------------------------
 
@@ -26,7 +27,7 @@ export default function AirportDashboard() {
 
   const [scheduledFlights, setScheduledFlights] = useState({});
   const [filteredScheduledFlights, setFilteredScheduledFlights] = useState({});
-  const [searchAirport, setSearchAirport] = useState(null);
+  const [selectedDepartAirport, setSelectedDepartAirport] = useState({});
 
   const { airports } = useSelector((state) => state.airports);
   const { flights } = useSelector((state) => state.flights);
@@ -82,18 +83,19 @@ export default function AirportDashboard() {
     return `${hours}:${minutes}`;
   };
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-    setSearchAirport(value);
+  const handleSearch = async () => {
+    if (selectedDepartAirport?.iata) {
+      console.log("📢 requesting initial state for live dashboard");
+      socket.emit(AIRPORT_LIVE_DASHBOARD_CHANNEL_INIT, {
+        city: selectedDepartAirport?.icao,
+      });
+    }
   };
 
-  const handleSearch = async () => {
-    // socket.connect();
-
-    console.log("📢 requesting initial state for live dashboard");
-    socket.emit(AIRPORT_LIVE_DASHBOARD_CHANNEL_INIT, {
-      city: searchAirport,
-    });
+  const getSelectedAirport = (airport, key) => {
+    if (key === "airport") {
+      setSelectedDepartAirport(airport);
+    }
   };
 
   return (
@@ -103,23 +105,25 @@ export default function AirportDashboard() {
       <div
         style={{
           display: "flex",
-          flexDirection: "row",
           gap: "0.5rem",
           marginTop: "1rem",
+          width: "100%",
         }}
       >
-        <input
-          placeholder="EDDF"
-          onChange={handleChange}
-          style={{
-            padding: "0.5rem",
-            border: "1px solid gray",
-            borderRadius: "4px",
-            backgroundColor: "white",
-            color: "black",
-          }}
-        />
-        <button onClick={handleSearch}>Search</button>
+        <div>
+          <SearchComponent
+            getSelectedAirport={getSelectedAirport}
+            placeHolder="Search Airport ..."
+            ident="airport"
+          />
+        </div>
+
+        <button
+          onClick={handleSearch}
+          style={{ marginLeft: "24px", borderRadius: 8 }}
+        >
+          Search
+        </button>
       </div>
 
       <div
@@ -155,7 +159,7 @@ export default function AirportDashboard() {
                     <b>Flight ID: </b> {flight?.flight?.iata?.toUpperCase()}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Airport: </b> {flight?.arrival?.airport}
+                    <b>Airport: </b> {flight?.departure?.airport}
                   </p>
                   <p style={{ margin: 0 }}>
                     <b>IATA: </b> {flight?.arrival?.iata}
@@ -173,7 +177,7 @@ export default function AirportDashboard() {
 
                   <p style={{ margin: 0 }}>
                     <b>Gate: </b>
-                    {flight?.arrival?.gate ?? ""}
+                    {flight?.arrival?.gate ?? "- -"}
                   </p>
                 </div>
 
@@ -229,7 +233,7 @@ export default function AirportDashboard() {
                     <b>Flight ID: </b> {flight?.flight?.iata?.toUpperCase()}
                   </p>
                   <p style={{ margin: 0 }}>
-                    <b>Airport: </b> {flight?.departure?.airport}
+                    <b>Airport: </b> {flight?.arrival?.airport}
                   </p>
                   <p style={{ margin: 0 }}>
                     <b>IATA: </b> {flight?.departure?.iata}
@@ -247,7 +251,7 @@ export default function AirportDashboard() {
 
                   <p style={{ margin: 0 }}>
                     <b>Gate: </b>
-                    {flight?.arrival?.gate ?? ""}
+                    {flight?.arrival?.gate ?? "- -"}
                   </p>
                 </div>
 
